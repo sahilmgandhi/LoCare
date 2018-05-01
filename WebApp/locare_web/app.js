@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
+var mongoDb = require('./mongo');
+
 
 var indexRouter = require('./routes/index');
 
@@ -21,6 +23,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+mongoDb.connect(function (err) {
+  if (err) {
+    app.use(function (err, req, res, next) {
+      res.status(500).send('Database error!')
+    });
+  } else {
+  }
+});
 
 app.use('/', indexRouter);
 
