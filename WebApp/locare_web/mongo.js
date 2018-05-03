@@ -31,16 +31,32 @@ exports.connect = function (done) {
 }
 
 // Getter Functions from MongoDB Database
-exports.getUniqueId = function () {
+exports.getUniqueId = function (username, callback) {
+  users.findOne({ username: username }, (err, res) => {
+    if (res) {
+      res = res.uniqueid;
+    }
+    callback(err, res);
+  });
 }
 
-exports.getPrimaryPhoneNumber = function () {
+exports.getPrimaryPhoneNumber = function (username, uniqueId, callback) {
+  users.findOne({ username: username, uniqueid: uniqueId }, (err, res) => {
+    if (res) {
+      res = res.primaryPhoneNumber;
+    }
+    callback(err, res);
+  })
 }
 
 exports.getLatestLocation = function () {
 }
 
-exports.getManyLocations = function () {
+exports.getRangeLocations = function () {
+}
+
+exports.getRawLocations = function () {
+
 }
 
 // Inserting new things into MongoDB
@@ -60,8 +76,6 @@ exports.updateTimestamp = function () {
 exports.updatePrimaryPhoneNumber = function () {
 
 }
-
-exports.get
 
 exports.close = function (done) {
   if (state.db) {
