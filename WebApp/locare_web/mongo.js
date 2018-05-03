@@ -30,9 +30,38 @@ exports.connect = function (done) {
   })
 }
 
-exports.get = function () {
-  return state.db
+// Getter Functions from MongoDB Database
+exports.getUniqueId = function () {
 }
+
+exports.getPrimaryPhoneNumber = function () {
+}
+
+exports.getLatestLocation = function () {
+}
+
+exports.getManyLocations = function () {
+}
+
+// Inserting new things into MongoDB
+exports.insertNewUser = function () {
+
+}
+
+exports.insertNewLocation = function () {
+
+}
+
+// Update functions for things already in DB
+exports.updateTimestamp = function () {
+
+}
+
+exports.updatePrimaryPhoneNumber = function () {
+
+}
+
+exports.get
 
 exports.close = function (done) {
   if (state.db) {

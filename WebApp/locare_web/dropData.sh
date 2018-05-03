@@ -1,2 +1,2 @@
 use LoCare;
-db.DropDatabase();
+db.dropDatabase();

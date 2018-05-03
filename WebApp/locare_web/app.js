@@ -8,7 +8,7 @@ var mongoDb = require('./mongo');
 
 
 var indexRouter = require('./routes/index');
-
+var apiRouter = require('./routes/api');
 var app = express();
 
 // view engine setup
@@ -30,10 +30,12 @@ mongoDb.connect(function (err) {
       res.status(500).send('Database error!')
     });
   } else {
+    console.log("Connected to LoCare");
   }
 });
 
 app.use('/', indexRouter);
+app.use('/api/', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
