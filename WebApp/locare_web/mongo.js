@@ -46,17 +46,33 @@ exports.getPrimaryPhoneNumber = function (username, uniqueId, callback) {
       res = res.primaryPhoneNumber;
     }
     callback(err, res);
+  });
+}
+
+exports.getLatestLocation = function (uniqueId, callback) {
+  locations.find({ uniqueid: uniqueId }).sort({ timestamp: -1 }).limit(1).toArray((err, res) => {
+    if (res) {
+      delete res.uniqueid;
+    }
+    callback(err, res);
+  });
+}
+
+exports.getRangeLocations = function (uniqueId, timestamp1, timestamp2, callback) {
+  locations.find({ uniqueid: uniqueId, timestamp: { $gt: timestamp1, $lt: timestamp2 } }).sort({ timestamp: 1 }).toArray((err, res) => {
+    callback(err, res);
   })
 }
 
-exports.getLatestLocation = function () {
-}
-
-exports.getRangeLocations = function () {
-}
-
-exports.getRawLocations = function () {
-
+exports.getRawLocations = function (uniqueId, callback) {
+  locations.find({ uniqueid: uniqueId }).sort({ timestamp: 1 }).toArray((err, res) => {
+    if (res) {
+      res.forEach(element => {
+        delete element._id;
+      });
+    }
+    callback(err, res);
+  });
 }
 
 // Inserting new things into MongoDB

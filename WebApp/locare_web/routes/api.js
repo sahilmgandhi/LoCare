@@ -17,13 +17,21 @@ router.get('/getLoc', function (req, res, next) {
 
 // Get all raw locations from the database
 router.get('/rawLoc', function (req, res, next) {
-  res.send("hi");
+  let uniqueid = String(req.query.uniqueid);
+  db.getRawLocations(uniqueid, (err, result) => {
+    if (err) {
+      handleErrors(res, req, err, "", "");
+    }
+    else {
+      res.json(result);
+    }
+  })
 })
 
 // Get the uniqueid for a user
 router.get('/uniqueId', function (req, res, next) {
   let username = String(req.query.username);
-  console.log(username);
+  // console.log(username);
   db.getUniqueId(username, (err, result) => {
     if (err) {
       hadleErrors(res, req, err, "", "");
