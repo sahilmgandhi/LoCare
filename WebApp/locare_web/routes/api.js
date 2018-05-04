@@ -12,7 +12,31 @@ router.use(bodyParser.json());
 */
 // Get all locations for a user 
 router.get('/getLoc', function (req, res, next) {
-  res.send("hi");
+  let uniqueid = String(req.query.uniqueid);
+  let currTimestamp = new Date().getTime();
+  db.getRangeLocations(uniqueid, 0, currTimestamp, (err, result) => {
+    if (err) {
+      handleErrors(res, req, err, "", "");
+    }
+    else {
+      res.json(result);
+    }
+  });
+})
+
+// Get range of locations for a user based on two timestamps
+router.get('/getRangeLoc', function (req, res, next) {
+  let uniqueid = String(req.query.uniqueid);
+  let startTime = Number(req.query.startTime);
+  let endTime = Number(req.query.endTime);
+  db.getRangeLocations(uniqueid, startTime, endTime, (err, result) => {
+    if (err) {
+      handleErrors(res, req, err, "", "");
+    }
+    else {
+      res.json(result);
+    }
+  });
 })
 
 // Get all raw locations from the database
@@ -25,7 +49,7 @@ router.get('/rawLoc', function (req, res, next) {
     else {
       res.json(result);
     }
-  })
+  });
 })
 
 // Get the uniqueid for a user
@@ -40,7 +64,7 @@ router.get('/uniqueId', function (req, res, next) {
       res.status(200);
       res.send(String(result));
     }
-  })
+  });
 })
 
 /*
@@ -48,7 +72,6 @@ router.get('/uniqueId', function (req, res, next) {
 */
 // Send a new location to be added to the mongodb database
 router.post('/sendLoc', function (req, res, next) {
-
   res.send("hi");
 })
 

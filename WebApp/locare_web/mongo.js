@@ -60,6 +60,12 @@ exports.getLatestLocation = function (uniqueId, callback) {
 
 exports.getRangeLocations = function (uniqueId, timestamp1, timestamp2, callback) {
   locations.find({ uniqueid: uniqueId, timestamp: { $gt: timestamp1, $lt: timestamp2 } }).sort({ timestamp: 1 }).toArray((err, res) => {
+    if (res) {
+      res.forEach(element => {
+        delete element._id;
+        delete element.uniqueid;
+      })
+    }
     callback(err, res);
   })
 }
@@ -76,21 +82,21 @@ exports.getRawLocations = function (uniqueId, callback) {
 }
 
 // Inserting new things into MongoDB
-exports.insertNewUser = function () {
-
+exports.insertNewUser = function (username, uniqueId, phoneNumber, callback) {
+  users.insertOne({ username: username, uniqueid: uniqueId, primaryPhoneNumber: phoneNumber }, callback);
 }
 
-exports.insertNewLocation = function () {
-
+exports.insertNewLocation = function (uniqueId, timestamp, longitude, latitude, callback) {
+  locations.insertOne({ uniqueid: uniqueId, timestamp: timestamp, longitude: longitude, latitude: latitude }, callback);
 }
 
 // Update functions for things already in DB
-exports.updateTimestamp = function () {
-
+exports.updateTimestamp = function (uniqueId, timestamp, newTimeStamp, callback) {
+  locations.updateOne({ uniqueid: uniqueId, timestamp: timestamp }, { $set: { timestamp: newTimeStamp } }, callback);
 }
 
-exports.updatePrimaryPhoneNumber = function () {
-
+exports.updatePrimaryPhoneNumber = function (username, uniqueId, newPhoneNumber, callback) {
+  users.updateOne({ username: username, uniqueid: uniqueId }, { $set: { primaryPhoneNumber: newPhoneNumber } }, callback);
 }
 
 exports.close = function (done) {
