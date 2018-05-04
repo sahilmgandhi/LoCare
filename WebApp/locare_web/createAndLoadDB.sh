@@ -18,10 +18,10 @@ db.Locations.save([
   {"uniqueid": "Sahil", "timestamp": 1525212587, "longitude": 34.069893, "latitude": -118.44387}
 ])
 
-db.Locations.createIndex({"uniqueid":1, "timestamp":1});
+db.Locations.createIndex({"uniqueid":1, "timestamp":1}, {unique: true});
 
 db.Users.save( [
     {"username": "sahilg", "uniqueid": "Sahil", "primaryPhoneNumber": 8884724675}
 ]);
 
-db.Users.createIndex({"username":1, "uniqueid":1});
+db.Users.createIndex({"username":1, "uniqueid":1}, {unique: true});

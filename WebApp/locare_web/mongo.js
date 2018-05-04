@@ -99,6 +99,15 @@ exports.updatePrimaryPhoneNumber = function (username, uniqueId, newPhoneNumber,
   users.updateOne({ username: username, uniqueid: uniqueId }, { $set: { primaryPhoneNumber: newPhoneNumber } }, callback);
 }
 
+// Deleting things from the DB
+exports.deleteAllLocations = function (uniqueId, callback) {
+  locations.deleteMany({ uniqueid: uniqueId }, callback);
+}
+
+exports.deleteUser = function (uniqueId, callback) {
+  users.deleteMany({ uniqueid: uniqueId }, callback);
+}
+
 exports.close = function (done) {
   if (state.db) {
     state.db.close(function (err, result) {

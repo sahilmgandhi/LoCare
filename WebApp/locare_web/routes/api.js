@@ -71,27 +71,93 @@ router.get('/uniqueId', function (req, res, next) {
 *  Post endpoints
 */
 // Send a new location to be added to the mongodb database
-router.post('/sendLoc', function (req, res, next) {
-  res.send("hi");
+// Needs uniqueid, timestamp, longitude, latitude
+router.post('/newLoc', function (req, res, next) {
+  let reqVerification = verifyReq(req, "location");
+  if (reqVerification != "") {
+    handleErrors(res, "", "", 400, reqVerification);
+  }
+  else {
+    let uniqueId = String(req.body.uniqueid);
+    let timestamp = Number(req.body.timestamp);
+    let longitude = Number(req.body.longitude);
+    let latitude = Number(req.body.latitude);
+    db.insertNewLocation(uniqueId, timestamp, longitude, latitude, (err, result) => {
+      if (err) {
+        handleErrors(res, req, err, "", "");
+      }
+      else {
+        res.status(200);
+        res.send("Sucessfully inserted new location");
+      }
+    })
+  }
 })
 
 // Insert a new user into the users database
 router.post('/newUser', function (req, res, next) {
-  res.send("hi");
+  let reqVerification = verifyReq(req, "user");
+  if (reqVerification != "") {
+    handleErrors(res, "", "", 400, reqVerification);
+  }
+  else {
+    let username = String(req.body.username);
+    let uniqueId = String(req.body.uniqueid);
+    let phoneNumber = Number(req.body.primaryPhoneNumber);
+    db.insertNewUser(username, uniqueId, phoneNumber, (err, result) => {
+      if (err) {
+        handleErrors(res, req, err, "", "");
+      }
+      else {
+        res.status(200);
+        res.send("Sucessfully inserted new user");
+      }
+    })
+  }
 })
 
 /*
 *  Delete endpoints
 */
 // Delete all locations for a database
-router.delete('/deleteLoc', function (req, res, next) {
-  res.send("hi");
+router.delete('/deleteAllLoc', function (req, res, next) {
+  let uniqueId = String(req.query.uniqueid);
+  db.deleteAllLocations(uniqueId, (err, result) => {
+    if (err) {
+      handleErrors(res, req, err, "", "");
+    }
+    else {
+      res.status(200);
+      res.send("All locations for that user have been deleted");
+    }
+  })
+})
+
+// Delete a user from the database (warning, it will delete all locations too!)
+router.delete('/deleteUser', function (req, res, next) {
+  let uniqueId = String(req.query.uniqueid);
+  db.deleteAllLocations(uniqueId, (err, result) => {
+    if (err) {
+      handleErrors(res, req, err, "", "");
+    }
+    else {
+      db.deleteUser(uniqueId, (err, result) => {
+        if (err) {
+          handleErrors(res, req, err, "", "");
+        }
+        else {
+          res.status(200);
+          res.send("User is deleted as are all the locations for that particular user.");
+        }
+      })
+    }
+  })
 })
 
 function handleErrors(res, req, err, statusCode, msg) {
+  let error = {};
   if (err === "") {
     res.status(statusCode);
-    let error = {};
     error.status = statusCode;
     res.send({ message: msg, error: error });
   }
@@ -101,14 +167,24 @@ function handleErrors(res, req, err, statusCode, msg) {
 
     // render the error page
     res.status(err.status || 500);
-    res.send({ error: error });
+    res.send({ error: err });
   }
 }
 
-function verifyReq(req) {
+function verifyReq(req, reqType) {
   let contType = req.headers[ 'content-type' ];
   if (!contType || contType.indexOf('application/json') !== 0) {
     return "Please use application/json as the content-type";
+  }
+  if (reqType == "location") {
+    if (req.body.uniqueid == null || req.body.timestamp == null || req.body.longitude == null || req.body.latitude == null) {
+      return "Request body must have uniqueid, timestamp, longitude, and latitude!";
+    }
+  }
+  else if (reqType == "user") {
+    if (req.body.username == null || req.body.uniqueid == null || req.body.primaryPhoneNumber == null) {
+      return "Request body must have username, uniqueid, and primaryPhoneNumber";
+    }
   }
   return "";
 }
