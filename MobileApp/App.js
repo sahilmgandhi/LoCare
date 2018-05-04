@@ -9,7 +9,9 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View, 
+  Button, 
+  Alert
 } from 'react-native';
 
 const instructions = Platform.select({
@@ -25,14 +27,20 @@ export default class App extends Component<Props> {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native!
+          Welcome to Cian's React Native!
         </Text>
         <Text style={styles.instructions}>
           To get started, edit App.js
         </Text>
         <Text style={styles.instructions}>
-          {instructions}
+          {instructions}{"\n"}
         </Text>
+        <Button
+        onPress={() => {
+		    Alert.alert('You tapped the button!');
+		    }}
+         title="Press Me"
+        />
       </View>
     );
   }
