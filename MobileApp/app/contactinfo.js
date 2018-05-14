@@ -1,0 +1,95 @@
+import React, { Component } from 'react';
+import { 
+  AppRegistry, 
+  StyleSheet, 
+  View, 
+  Text, 
+  TextInput,
+  TouchableOpacity,
+  Button
+} from 'react-native';
+
+import { StackNavigator } from 'react-navigation';
+
+export default class ContactsPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { 
+      name: 'Name',
+      phone: 'Phone number',
+      email: 'Email'
+    };
+  }
+
+  // static navigationOptions = {
+  //   title: 'Welcome',
+  // };
+
+  render() {
+    const { name } = this.props.navigation.state.params;
+
+    return (
+      <View style={styles.container}>
+        <Text style={styles.hello}>{name}</Text>
+        <Text style={styles.instructions}>Please enter your personal info</Text>
+
+        <TextInput
+          style={styles.input}
+          underlineColorAndroid={'#44B3C2'}
+          onChangeText={(name) => this.setState({name})}
+          value={this.state.name}
+        />
+
+        <TextInput
+          style={styles.input}
+          underlineColorAndroid={'#44B3C2'}
+          onChangeText={(phone) => this.setState({phone})}
+          value={this.state.phone}
+        />
+
+        <TextInput
+          style={styles.input}
+          underlineColorAndroid={'#44B3C2'}
+          onChangeText={(email) => this.setState({email})}
+          value={this.state.email}
+        />
+
+        <TouchableOpacity>
+          <Button style={styles.doneButton} 
+            title="Done"
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  hello: {
+    fontSize: 30,
+    color: 'black'
+  },
+  instructions: {
+    fontSize: 15, 
+    marginBottom: 20,
+    color: 'black'
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    backgroundColor: '#F5FCFF',
+    padding: 25
+  },
+  input: {
+    height: 40,
+    width: 300,
+    color: 'gray'
+  },
+  doneButton: {
+    marginTop: 10,
+    color: '#44B3C2',
+    fontSize: 20,
+    padding: 5
+  }
+});
