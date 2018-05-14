@@ -15,49 +15,77 @@ export default class ContactsPage extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      name: 'Name',
-      phone: 'Phone number',
-      email: 'Email'
+      name1: 'Name',
+      phone1: 'Phone number',
+      email1: 'Email',
+      name2: 'Name',
+      phone2: 'Phone number',
+      email2: 'Email'
     };
   }
-
-  // static navigationOptions = {
-  //   title: 'Welcome',
-  // };
 
   render() {
     const { name } = this.props.navigation.state.params;
 
     return (
       <View style={styles.container}>
-        <Text style={styles.hello}>{name}</Text>
-        <Text style={styles.instructions}>Please enter your personal info</Text>
+        <Text style={styles.hello}>Thanks, {name}!</Text>
+        <Text style={styles.instructions}>Now, enter your emergency contact info</Text>
 
-        <TextInput
-          style={styles.input}
-          underlineColorAndroid={'#44B3C2'}
-          onChangeText={(name) => this.setState({name})}
-          value={this.state.name}
-        />
+        <View style={styles.contactView}>
+          <Text style={styles.contactText}>Contact #1</Text>
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid={'#44B3C2'}
+            onChangeText={(name1) => this.setState({name1})}
+            value={this.state.name1}
+          />
 
-        <TextInput
-          style={styles.input}
-          underlineColorAndroid={'#44B3C2'}
-          onChangeText={(phone) => this.setState({phone})}
-          value={this.state.phone}
-        />
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid={'#44B3C2'}
+            onChangeText={(phone1) => this.setState({phone1})}
+            value={this.state.phone1}
+          />
 
-        <TextInput
-          style={styles.input}
-          underlineColorAndroid={'#44B3C2'}
-          onChangeText={(email) => this.setState({email})}
-          value={this.state.email}
-        />
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid={'#44B3C2'}
+            onChangeText={(email1) => this.setState({email1})}
+            value={this.state.email1}
+          />
+        </View>
+
+        <View style={styles.contactView}>
+          <Text style={styles.contactText}>Contact #2</Text>
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid={'#44B3C2'}
+            onChangeText={(name2) => this.setState({name2})}
+            value={this.state.name2}
+          />
+
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid={'#44B3C2'}
+            onChangeText={(phone2) => this.setState({phone2})}
+            value={this.state.phone2}
+          />
+
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid={'#44B3C2'}
+            onChangeText={(email2) => this.setState({email2})}
+            value={this.state.email2}
+          />
+        </View>
 
         <TouchableOpacity>
-          <Button style={styles.doneButton} 
-            title="Done"
-          />
+          <Text
+            style={styles.doneButton}
+            onPress={()=>this.props.navigation.navigate("Main")} 
+          >Done
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -81,13 +109,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
     padding: 25
   },
+  contactView: {
+    backgroundColor: 'white',
+    padding: 10,
+    marginBottom: 20
+  },
+  contactText: {
+    color: 'black',
+    fontSize: 20
+  },
   input: {
     height: 40,
     width: 300,
     color: 'gray'
   },
   doneButton: {
-    marginTop: 10,
     color: '#44B3C2',
     fontSize: 20,
     padding: 5

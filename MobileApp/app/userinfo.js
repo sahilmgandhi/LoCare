@@ -52,8 +52,8 @@ export default class UserPage extends Component {
         <TouchableOpacity>
           <Text
             style={styles.doneButton}
-            onPress={()=>this.props.navigation.navigate("Second", { name: 'Roslyn'})} 
-          >Done
+            onPress={()=>this.props.navigation.navigate("Second", { name: this.state.name})} 
+          >Next
           </Text>
         </TouchableOpacity>
       </View>
