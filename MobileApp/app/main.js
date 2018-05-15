@@ -13,7 +13,20 @@ export default class Main extends Component {
 render() {
 
   const { phone } = this.props.navigation.state.params;
-
+  var SmsAndroid = require('react-native-sms-android');
+  SmsAndroid.sms(
+    '4083180907', // phone number to send sms to
+    'This is the sms text', // sms body
+    'sendDirect', // sendDirect or sendIndirect
+    (err, message) => {
+      if (err){
+        console.log("error");
+      } else {
+        console.log(message); // callback message
+      }
+    }
+  );
+  
   return (
     <View style={styles.container}>
         <Text>{phone}</Text>
