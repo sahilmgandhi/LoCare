@@ -11,8 +11,12 @@ import {
 
 export default class Main extends Component {
 render() {
+
+  const { phone } = this.props.navigation.state.params;
+
   return (
     <View style={styles.container}>
+        <Text>{phone}</Text>
         <TouchableOpacity
           	style={styles.button} >
           	<Text style={styles.text}>!</Text>

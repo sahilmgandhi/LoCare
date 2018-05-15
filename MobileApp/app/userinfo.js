@@ -15,9 +15,9 @@ export default class UserPage extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      name: 'Name',
-      phone: 'Phone number',
-      email: 'Email'
+      name: '',
+      phone: '',
+      email: ''
     };
   }
   
@@ -30,6 +30,8 @@ export default class UserPage extends Component {
 
         <TextInput
           style={styles.input}
+          placeholder='Name'
+          placeholderTextColor='gray'
           underlineColorAndroid={'#44B3C2'}
           onChangeText={(name) => this.setState({name})}
           value={this.state.name}
@@ -37,6 +39,8 @@ export default class UserPage extends Component {
 
         <TextInput
           style={styles.input}
+          placeholder='Phone'
+          placeholderTextColor='gray'
           underlineColorAndroid={'#44B3C2'}
           onChangeText={(phone) => this.setState({phone})}
           value={this.state.phone}
@@ -44,6 +48,8 @@ export default class UserPage extends Component {
 
         <TextInput
           style={styles.input}
+          placeholder='Email'
+          placeholderTextColor='gray'
           underlineColorAndroid={'#44B3C2'}
           onChangeText={(email) => this.setState({email})}
           value={this.state.email}
