@@ -15,12 +15,12 @@ export default class ContactsPage extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      name1: 'Name',
-      phone1: 'Phone number',
-      email1: 'Email',
-      name2: 'Name',
-      phone2: 'Phone number',
-      email2: 'Email'
+      name1: '',
+      phone1: '',
+      email1: '',
+      name2: '',
+      phone2: '',
+      email2: ''
     };
   }
 
@@ -36,6 +36,8 @@ export default class ContactsPage extends Component {
           <Text style={styles.contactText}>Contact #1</Text>
           <TextInput
             style={styles.input}
+            placeholder='Name'
+            placeholderTextColor='gray'
             underlineColorAndroid={'#44B3C2'}
             onChangeText={(name1) => this.setState({name1})}
             value={this.state.name1}
@@ -43,6 +45,8 @@ export default class ContactsPage extends Component {
 
           <TextInput
             style={styles.input}
+            placeholder='Phone'
+            placeholderTextColor='gray'
             underlineColorAndroid={'#44B3C2'}
             onChangeText={(phone1) => this.setState({phone1})}
             value={this.state.phone1}
@@ -50,6 +54,8 @@ export default class ContactsPage extends Component {
 
           <TextInput
             style={styles.input}
+            placeholder='Email'
+            placeholderTextColor='gray'
             underlineColorAndroid={'#44B3C2'}
             onChangeText={(email1) => this.setState({email1})}
             value={this.state.email1}
@@ -60,6 +66,8 @@ export default class ContactsPage extends Component {
           <Text style={styles.contactText}>Contact #2</Text>
           <TextInput
             style={styles.input}
+            placeholder='Name'
+            placeholderTextColor='gray'
             underlineColorAndroid={'#44B3C2'}
             onChangeText={(name2) => this.setState({name2})}
             value={this.state.name2}
@@ -67,6 +75,8 @@ export default class ContactsPage extends Component {
 
           <TextInput
             style={styles.input}
+            placeholder='Phone'
+            placeholderTextColor='gray'
             underlineColorAndroid={'#44B3C2'}
             onChangeText={(phone2) => this.setState({phone2})}
             value={this.state.phone2}
@@ -74,6 +84,8 @@ export default class ContactsPage extends Component {
 
           <TextInput
             style={styles.input}
+            placeholder='Email'
+            placeholderTextColor='gray'
             underlineColorAndroid={'#44B3C2'}
             onChangeText={(email2) => this.setState({email2})}
             value={this.state.email2}
@@ -83,7 +95,7 @@ export default class ContactsPage extends Component {
         <TouchableOpacity>
           <Text
             style={styles.doneButton}
-            onPress={()=>this.props.navigation.navigate("Main")} 
+            onPress={()=>this.props.navigation.navigate("Main", { phone: this.state.phone1})} 
           >Done
           </Text>
         </TouchableOpacity>
