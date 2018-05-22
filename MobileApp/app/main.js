@@ -9,14 +9,44 @@ import {
   Button
 } from 'react-native';
 
-export default class Main extends Component {
-render() {
+//import GeoLocationExample from './geo.js' 
+//uncomment for separate file implementation 
 
+//location
+//sending as JSON 
+//make new function to connect phone number to function
+//add another button
+
+export default class Main extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        latitude: null,
+        longitude: null,
+        error: null,
+    };
+  }
+
+    componentDidMount() {
+      navigator.geolocation.getCurrentPosition(
+                 (position) => {
+                     this.setState({
+                       latitude: position.coords.latitude,
+                       longitude: position.coords.longitude,
+                       error: null,
+                   });
+                 },
+                 (error) => this.setState({ error: error.message }),
+                 { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+                 );
+    }
+
+render() {
   const { phone } = this.props.navigation.state.params;
   var SmsAndroid = require('react-native-sms-android');
   SmsAndroid.sms(
-    '4083180907', // phone number to send sms to
-    'This is the sms text', // sms body
+    '4088064768', // phone number to send sms to
+    'Wassup boiiii', // sms body
     'sendDirect', // sendDirect or sendIndirect
     (err, message) => {
       if (err){
@@ -34,7 +64,10 @@ render() {
           	style={styles.button} >
           	<Text style={styles.text}>!</Text>
         </TouchableOpacity>
-      </View>
+        <Text>Latitude: {this.state.latitude}</Text>
+        <Text>Longitude: {this.state.longitude}</Text>
+          {this.state.error ? <Text>Error: {this.state.error}</Text> : null}
+        </View>
     );
   }
 }
