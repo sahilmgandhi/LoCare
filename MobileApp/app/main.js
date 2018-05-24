@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Geolocation from 'react-native-geolocation-service';
 import { 
   AppRegistry, 
   StyleSheet, 
@@ -24,28 +25,36 @@ export default class Main extends Component {
         latitude: null,
         longitude: null,
         error: null,
+        position: null,
     };
   }
 
     componentDidMount() {
-      navigator.geolocation.getCurrentPosition(
-                 (position) => {
-                     this.setState({
-                       latitude: position.coords.latitude,
-                       longitude: position.coords.longitude,
-                       error: null,
-                   });
-                 },
-                 (error) => this.setState({ error: error.message }),
-                 { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-                 );
+      if (1) {
+        Geolocation.getCurrentPosition(
+          (position) => {
+            console.log(position);
+            this.setState({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              error: null,
+              position: position,
+            });
+            },
+            (error) => {
+                // See error code charts below.
+                console.log(error.code, error.message);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+          );
+      }
     }
 
 render() {
   const { phone } = this.props.navigation.state.params;
   var SmsAndroid = require('react-native-sms-android');
   SmsAndroid.sms(
-    '4088064768', // phone number to send sms to
+    '4089925459', // phone number to send sms to
     'Wassup boiiii', // sms body
     'sendDirect', // sendDirect or sendIndirect
     (err, message) => {
