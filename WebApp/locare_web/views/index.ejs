@@ -39,7 +39,7 @@
     <input id="pac-input" class="controls" type="text" placeholder="Search unique ID">
     <br>
     <br>
-    (OPTIONAL) Choose timeframe: <input type="checkbox" name="datetimes" />
+    (OPTIONAL) Choose timeframe: <input type="checkbox" id = "dateCheck" name="datetimes"/>
     <br>
     <input type="button" id="searchBtn" value="Search" onclick="deleteMarkers(); handleInput('');"
       class="btn btn-primary" />
@@ -65,16 +65,29 @@
 
   <script>
 
-    $(function() {
-      $('input[name="datetimes"]').daterangepicker({
-        timePicker: true,
-        startDate: moment().startOf('hour'),
-        endDate: moment().startOf('hour').add(32, 'hour'),
-        locale: {
-          format: 'M/DD hh:mm A'
-        }
+      $(function() {
+        $('input[name="datetimes"]').daterangepicker({
+          startDate: "05/23/2018",
+          endDate: "05/29/2018",
+          opens: 'left'
+        });
       });
-    });  
+
+    // $(function() {
+    //   $('input[name="datetimes"]').daterangepicker({
+    //     timePicker: true,
+    //     startDate: "05/23/2018",
+    //     endDate: "05/29/2018"
+    //   });
+    // });  
+
+    $('input[name="datetimes"]').on('showCalendar.daterangepicker', function(ev, picker) {
+      startDate = picker.startDate.format('YYYY-MM-DD');
+      endDate = picker.endDate.format('YYYY-MM-DD');
+
+      console.log(startDate);
+      console.log(endDate);
+    });
     
     $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
       startDate = picker.startDate.format('YYYY-MM-DD');
@@ -193,22 +206,14 @@
 
 
     function handleInput(elem) {
-      console.log(startDate);
-      console.log(endDate);
-
       stopPeriodicUpdates();
       var value = '';
-      if (elem == '') {
-          value = document.getElementById('pac-input').value;
-      }
-      else {
-        value = currentUser;
-      }
+
+      value = document.getElementById('pac-input').value;
 
       if (value == '') {
         alert("Please enter a valid ID");
       } else {
-
           var getStringValue = '/api/getLoc?uniqueid=' + value;
           currentUser = value;          
 
@@ -225,15 +230,52 @@
           if (count == 0) {
             alert("USER ID NOT FOUND!");
           } else {
-            restartPeriodicUpdates();
-            for (var i = 0; i < count; i++) {
-              var latitude = Number(jsonResp[ i ].latitude);
-              var longitude = Number(jsonResp[ i ].longitude);
-              var location = { lat: latitude, lng: longitude };
-              addMarker(location, map);
+            if (document.getElementById('dateCheck').checked) {
+              console.log(jsonResp);
+  
+              var startMs = moment(startDate).unix().valueOf();
+              var endMs = moment(endDate).unix().valueOf();
 
-              var newLoc = { lat: 34.0562, lng: -118.0437 };
-              addMarker(newLoc, map);
+              // console.log(moment.unix(startMs).format('dddd, MMMM Do, YYYY h:mm:ss A'));
+              // console.log(moment.unix(startMs).format('dddd, MMMM Do, YYYY h:mm:ss A'));
+
+              restartPeriodicUpdates();
+              for (var i = 0; i < count; i++) {
+                // console.log("startMs: " + startMs);
+                // console.log("endMs: " + endMs);
+                // console.log("Timestamp: " + jsonResp[i].timestamp);
+
+                // console.log(">=: " + jsonResp[i].timestamp >= startMs);
+                // console.log("<= : " + jsonResp[i].timestamp <= endMs)
+
+                if (jsonResp[i].timestamp >= startMs && jsonResp[i].timestamp <= endMs) {
+                  console.log("aseg");
+                  var latitude = Number(jsonResp[ i ].latitude);
+                  var longitude = Number(jsonResp[ i ].longitude);
+                  var location = { lat: latitude, lng: longitude };
+
+                  console.log(location);
+                  addMarker(location, map);
+
+                  // var newLoc = { lat: 34.069633, lng: -118.444275 };
+                  // addMarker(newLoc, map);
+                }
+              }
+
+            } else {
+
+              restartPeriodicUpdates();
+              for (var i = 0; i < count; i++) {
+                var latitude = Number(jsonResp[ i ].latitude);
+                var longitude = Number(jsonResp[ i ].longitude);
+                var location = { lat: latitude, lng: longitude };
+
+                console.log(location);
+                addMarker(location, map);
+
+                // var newLoc = { lat: 34.069633, lng: -118.444275 };
+                // addMarker(newLoc, map);
+              }
             }
           }
         }
