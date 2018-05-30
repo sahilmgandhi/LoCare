@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Geolocation from 'react-native-geolocation-service';
 import { 
   AppRegistry, 
   StyleSheet, 
@@ -9,32 +10,97 @@ import {
   Button
 } from 'react-native';
 
-export default class Main extends Component {
-render() {
+//import GeoLocationExample from './geo.js' 
+//uncomment for separate file implementation 
 
-  const { phone } = this.props.navigation.state.params;
-  var SmsAndroid = require('react-native-sms-android');
-  SmsAndroid.sms(
-    '4083180907', // phone number to send sms to
-    'This is the sms text', // sms body
-    'sendDirect', // sendDirect or sendIndirect
-    (err, message) => {
-      if (err){
-        console.log("error");
-      } else {
-        console.log(message); // callback message
-      }
+//location
+//sending as JSON 
+//make new function to connect phone number to function
+//add another button
+
+export default class Main extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        latitude: null,
+        longitude: null,
+        error: null,
+        position: null,
+    };
+  }
+
+  componentDidMount() {
+    if (1) {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          console.log(position);
+          this.setState({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            error: null,
+            position: position,
+          });
+          },
+          (error) => {
+              // See error code charts below.
+              console.log(error.code, error.message);
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        );
     }
-  );
-  
+  }
+
+  onClick = (phone) => {
+    
+    const dateTime = Date.now();
+    const timestamp = Math.floor(dateTime / 1000);
+    var text = "Lat: " + this.state.latitude + " Long: " + this.state.longitude + " Time: " + timestamp;
+
+    var SmsAndroid = require('react-native-sms-android');
+    SmsAndroid.sms(
+      phone, // phone number to send sms to
+      text, // sms body
+      'sendDirect', // sendDirect or sendIndirect
+      (err, message) => {
+        if (err){
+          console.log("error");
+        } else {
+          console.log(message); // callback message
+        }
+      }
+    );
+
+    //CHANGE LOCALHOST
+    // fetch('localhost', {
+    //   method: 'POST',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     "uniqueid": "12345",
+    //     "timestamp": time,
+    //     "longitude": this.state.longitude,
+    //     "latitude": this.state.latitude
+    //   }),
+    // });
+  }
+
+render() {
+  const { phone } = this.props.navigation.state.params;
+
   return (
     <View style={styles.container}>
         <Text>{phone}</Text>
         <TouchableOpacity
-          	style={styles.button} >
+          	style={styles.button} 
+            onPress={ () => this.onClick(phone)}>
           	<Text style={styles.text}>!</Text>
         </TouchableOpacity>
-      </View>
+        <Text>Latitude: {this.state.latitude}</Text>
+        <Text>Longitude: {this.state.longitude}</Text>
+          {this.state.error ? <Text>Error: {this.state.error}</Text> : null}
+        </View>
     );
   }
 }
