@@ -8,6 +8,12 @@
   <link rel="stylesheet" href="stylesheets/style.css">
   <link rel="stylesheet" href="https://bootswatch.com/4/materia/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script src="/scripts/combodate.js"></script> -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 </head>
 
 <body>
@@ -33,10 +39,14 @@
     <input id="pac-input" class="controls" type="text" placeholder="Search unique ID">
     <br>
     <br>
-    <input type="button" id="searchBtn" value="Search" onclick="deleteMarkers(); handleInput(''); restartPeriodicUpdates();"
+    (OPTIONAL) Choose timeframe: <input type="checkbox" name="datetimes" />
+    <br>
+    <input type="button" id="searchBtn" value="Search" onclick="deleteMarkers(); handleInput('');"
       class="btn btn-primary" />
     <br>
     <br>
+
+    
     <input type="button" id="stopPeriodicUpdates" value="Stop Periodic Updates" onclick="stopPeriodicUpdates();" class="btn btn-warning"
     />
     <br>
@@ -46,7 +56,7 @@
     <!-- <input type="button" id="postBtn" value="Post New Data" onclick="postStuff();" /> -->
     <br>
     <br>
-    <input type="button" id="deleteBtn" value="Delete All Data" onclick="deleteAllData();" class="btn btn-danger" />
+    <input type="button" id="deleteBtn" value="Delete All Data" onclick="deleteAllData('');" class="btn btn-danger" />
   </div>
 
   <div class="main">
@@ -54,13 +64,40 @@
   </div>
 
   <script>
+
+    $(function() {
+      $('input[name="datetimes"]').daterangepicker({
+        timePicker: true,
+        startDate: moment().startOf('hour'),
+        endDate: moment().startOf('hour').add(32, 'hour'),
+        locale: {
+          format: 'M/DD hh:mm A'
+        }
+      });
+    });  
+    
+    $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
+      startDate = picker.startDate.format('YYYY-MM-DD');
+      endDate = picker.endDate.format('YYYY-MM-DD');
+
+      console.log(startDate);
+      console.log(endDate);
+    });
+
+    var jsonResp;
+    var currentUser = '';
+    var startDate;
+    var endDate;
+
     var navCount = 0;
     function toggleNav() {
       if (navCount % 2 == 0) {
         document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("mySidenav").style.paddingLeft = "2.5vw";
       }
       else {
         document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("mySidenav").style.paddingLeft = "0";
       }
       navCount++;
     }
@@ -77,14 +114,23 @@
     function initMap() {
       map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 34.0522, lng: -118.2437 },
-        zoom: 12
+        zoom: 11
       });
     }
 
     var timeOut;
     function restartPeriodicUpdates() {
-      handleInput(currentUser);
-      timeOut = setTimeout(restartPeriodicUpdates, 1000);
+      
+      if (jsonResp == null) {
+        stopPeriodicUpdates();
+      } else {
+        if ((currentUser != '') || (jsonResp.length != 0)) {
+            // handleInput('');
+            timeOut = setTimeout(restartPeriodicUpdates, 1000);
+        } else {
+          stopPeriodicUpdates();
+        }
+      }
     }
 
     function stopPeriodicUpdates() {
@@ -117,9 +163,9 @@
       });
     }*/
 
-    var currentUser = '';
+    
 
-    function handleInput(elem) {
+    function deleteAllData(elem) {
       var value = '';
       if (elem == '') {
         value = document.getElementById('pac-input').value;
@@ -127,35 +173,70 @@
       else {
         value = currentUser;
       }
-      var getStringValue = '/api/getLoc?uniqueid=' + value;
-      currentUser = value;
-      var jsonResp;
 
-      $.ajax({
-        url: getStringValue,
-        async: false,
-        dataType: 'json',
-        success: function (resp) {
-          jsonResp = resp;
-        }
-      });
+      var getStringValue = '/api/deleteAllLoc?uniqueid=' + value;
+      
 
-      var count = jsonResp.length;
-      if (count == 0) {
-        alert("USER ID NOT FOUND!");
-      } else {
-        for (var i = 0; i < count; i++) {
-          var latitude = Number(jsonResp[ i ].latitude);
-          var longitude = Number(jsonResp[ i ].longitude);
-          console.log(typeof (latitude));
-          var location = { lat: longitude, lng: latitude };
-          console.log(location);
-          addMarker(location, map);
+      console.log(getStringValue);
 
-          var newLoc = { lat: 34.0562, lng: -118.0437 };
-          addMarker(newLoc, map);
-        }
+        $.ajax({
+            type: "DELETE",
+            url: getStringValue,
+            // data: "name=someValue",
+            success: function(msg){
+                alert("Data Deleted: " + msg);
+            }
+        });   
+
+        deleteMarkers();   
+    }
+
+
+    function handleInput(elem) {
+      console.log(startDate);
+      console.log(endDate);
+
+      stopPeriodicUpdates();
+      var value = '';
+      if (elem == '') {
+          value = document.getElementById('pac-input').value;
       }
+      else {
+        value = currentUser;
+      }
+
+      if (value == '') {
+        alert("Please enter a valid ID");
+      } else {
+
+          var getStringValue = '/api/getLoc?uniqueid=' + value;
+          currentUser = value;          
+
+          $.ajax({
+            url: getStringValue,
+            async: false,
+            dataType: 'json',
+            success: function (resp) {
+              jsonResp = resp;
+            }
+          });
+
+          var count = jsonResp.length;
+          if (count == 0) {
+            alert("USER ID NOT FOUND!");
+          } else {
+            restartPeriodicUpdates();
+            for (var i = 0; i < count; i++) {
+              var latitude = Number(jsonResp[ i ].latitude);
+              var longitude = Number(jsonResp[ i ].longitude);
+              var location = { lat: latitude, lng: longitude };
+              addMarker(location, map);
+
+              var newLoc = { lat: 34.0562, lng: -118.0437 };
+              addMarker(newLoc, map);
+            }
+          }
+        }
     }
 
     // Sets the map on all markers in the array.
@@ -178,6 +259,7 @@
 
     // Adds a marker to the map.
     function addMarker(location, map) {
+      
       // Add the marker at the clicked location, and add the next-available label
       // from the array of alphabetical characters.
       var marker = new google.maps.Marker({
@@ -186,10 +268,18 @@
         map: map
       });
       markers.push(marker);
-    }
 
-    function deleteAllData() {
+      var infowindow = new google.maps.InfoWindow({
+          content: "Location: " + marker.getPosition()
+      });
 
+      marker.addListener('mouseover', function() {
+          infowindow.open(map, marker);
+      });
+
+      marker.addListener('mouseout', function() {
+          infowindow.close();
+      });
     }
 
 
