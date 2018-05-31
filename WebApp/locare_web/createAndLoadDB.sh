@@ -5,7 +5,7 @@ db.createCollection("Locations", {validator: {$and: [
   {timestamp: {$type:"number"}},
   {longitude: {$type:"number"}},
   {latitude: {$type:"number"}}
-]}})
+]}});
 
 db.createCollection("Users", {validator: {$and: [
         {username: {$type:"string"}},
@@ -16,7 +16,7 @@ db.createCollection("Users", {validator: {$and: [
 db.Locations.save([
   {"uniqueid": "Sahil", "timestamp": 1525212528, "longitude": -118.444275, "latitude": 34.069633},
   {"uniqueid": "Sahil", "timestamp": 1525212587, "longitude": -118.44387, "latitude": 34.069893}
-])
+]);
 
 db.Locations.createIndex({"uniqueid":1, "timestamp":1}, {unique: true});
 

@@ -175,15 +175,19 @@ function handleErrors(res, req, err, statusCode, msg) {
 function verifyReq(req, reqType) {
   let contType = req.headers[ 'content-type' ];
   if (!contType || contType.indexOf('application/json') !== 0) {
+    console.log("Please use application/json as the content-type");
     return "Please use application/json as the content-type";
   }
   if (reqType == "location") {
+    console.log(JSON.stringify(req.body));
     if (req.body.uniqueid == null || req.body.timestamp == null || req.body.longitude == null || req.body.latitude == null) {
+      console.log("Request body must have uniqueid, timestamp, longitude, and latitude!");
       return "Request body must have uniqueid, timestamp, longitude, and latitude!";
     }
   }
   else if (reqType == "user") {
     if (req.body.username == null || req.body.uniqueid == null || req.body.primaryPhoneNumber == null) {
+      console.log("Request body must have username, uniqueid, and primaryPhoneNumber");
       return "Request body must have username, uniqueid, and primaryPhoneNumber";
     }
   }
