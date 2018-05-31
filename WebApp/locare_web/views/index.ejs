@@ -126,8 +126,8 @@
 
     function initMap() {
       map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 34.0522, lng: -118.2437 },
-        zoom: 11
+        center: { lat: 34.069633, lng: -118.444275 },
+        zoom: 15
       });
     }
 
@@ -253,9 +253,9 @@
                   var latitude = Number(jsonResp[ i ].latitude);
                   var longitude = Number(jsonResp[ i ].longitude);
                   var location = { lat: latitude, lng: longitude };
-
-                  console.log(location);
-                  addMarker(location, map);
+                  var time = moment.unix(jsonResp[i].timestamp).format("DD MMM YYYY hh:mm a") //parse integer
+                  
+                  addMarker(location, map, time);
 
                   // var newLoc = { lat: 34.069633, lng: -118.444275 };
                   // addMarker(newLoc, map);
@@ -269,9 +269,9 @@
                 var latitude = Number(jsonResp[ i ].latitude);
                 var longitude = Number(jsonResp[ i ].longitude);
                 var location = { lat: latitude, lng: longitude };
-
-                console.log(location);
-                addMarker(location, map);
+                var time = moment.unix(jsonResp[i].timestamp).format("DD MMM YYYY hh:mm a") //parse integer
+                
+                addMarker(location, map, time);
 
                 // var newLoc = { lat: 34.069633, lng: -118.444275 };
                 // addMarker(newLoc, map);
@@ -300,7 +300,7 @@
     }
 
     // Adds a marker to the map.
-    function addMarker(location, map) {
+    function addMarker(location, map, time) {
       
       // Add the marker at the clicked location, and add the next-available label
       // from the array of alphabetical characters.
@@ -311,8 +311,9 @@
       });
       markers.push(marker);
 
+      var location = "Location: " + marker.getPosition() + "<br />" + "Time: " + time;
       var infowindow = new google.maps.InfoWindow({
-          content: "Location: " + marker.getPosition()
+          content: location
       });
 
       marker.addListener('mouseover', function() {

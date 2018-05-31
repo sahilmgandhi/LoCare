@@ -71,19 +71,23 @@ export default class Main extends Component {
     );
 
     //CHANGE LOCALHOST
-    // fetch('localhost', {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     "uniqueid": "12345",
-    //     "timestamp": time,
-    //     "longitude": this.state.longitude,
-    //     "latitude": this.state.latitude
-    //   }),
-    // });
+    fetch('http://131.179.42.187:5500/api/newLoc', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'uniqueid': "Sahil",
+        'timestamp': timestamp,
+        'latitude': this.state.latitude,
+        'longitude': this.state.longitude //CHECK THIS FOR FINAL IMPLEMENTATION
+      })
+    }).then(function(response) {
+      console.log(response.json())
+    }).catch(function(err) {
+      console.log(err);
+    })
   }
 
 render() {
