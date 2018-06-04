@@ -25,7 +25,7 @@ export default class Main extends Component {
         latitude: null,
         longitude: null,
         error: null,
-        position: null,
+        position: null
     };
   }
 
@@ -95,14 +95,16 @@ render() {
 
   return (
     <View style={styles.container}>
-        <Text>{phone}</Text>
         <TouchableOpacity
-          	style={styles.button} 
+          	style={styles.startbutton} 
             onPress={ () => this.onClick(phone)}>
-          	<Text style={styles.text}>!</Text>
+          	<Text style={styles.starttext}>START</Text>
         </TouchableOpacity>
-        <Text>Latitude: {this.state.latitude}</Text>
-        <Text>Longitude: {this.state.longitude}</Text>
+         <TouchableOpacity
+            style={styles.stopbutton} 
+            onPress={ () => this.onClick(phone)}>
+            <Text style={styles.stoptext}>STOP</Text>
+        </TouchableOpacity>
           {this.state.error ? <Text>Error: {this.state.error}</Text> : null}
         </View>
     );
@@ -111,23 +113,37 @@ render() {
 
 
 const styles = StyleSheet.create({
-  button: {
+  startbutton: {
     borderWidth:1,
    borderColor:'rgba(0,0,0,0.2)',
    alignItems:'center',
    justifyContent:'center',
-   width:200,
-   height:200,
-   backgroundColor:'red',
-   borderRadius:100,
+   width:400,
+   height:300,
+   backgroundColor: '#4286F4',
+   flex: 1
   },
-  text: {
+  stopbutton: {
+    borderWidth:1,
+   borderColor:'rgba(0,0,0,0.2)',
+   alignItems:'center',
+   justifyContent:'center',
+   width:400,
+   height:300,
+   backgroundColor: '#93BAF9',
+   flex: 1
+  },
+  starttext: {
   	fontSize: 70,
   	color: 'white'
   },
+  stoptext: {
+    fontSize: 70,
+    color: 'white'
+  },
   container: {
   	flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center'
   }
 });

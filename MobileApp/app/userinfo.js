@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   doneButton: {
     marginTop: 10,
-    color: '#44B3C2',
+    color: '#4286F4',
     fontSize: 20,
     padding: 5
   }
