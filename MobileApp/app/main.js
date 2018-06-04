@@ -119,7 +119,6 @@ const styles = StyleSheet.create({
    alignItems:'center',
    justifyContent:'center',
    width:400,
-   height:300,
    backgroundColor: '#4286F4',
    flex: 1
   },
@@ -129,7 +128,6 @@ const styles = StyleSheet.create({
    alignItems:'center',
    justifyContent:'center',
    width:400,
-   height:300,
    backgroundColor: '#93BAF9',
    flex: 1
   },
