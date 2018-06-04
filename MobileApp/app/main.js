@@ -25,8 +25,17 @@ export default class Main extends Component {
         latitude: null,
         longitude: null,
         error: null,
-        position: null
+        position: null,
+        looping: false,
+        canSend: false
     };
+
+    // Toggle the state every second
+    setInterval(() => {
+      this.setState(previousState => {
+        return { canSend: !previousState.canSend };
+      });
+    }, 1000);
   }
 
   componentDidMount() {
@@ -50,59 +59,78 @@ export default class Main extends Component {
     }
   }
 
-  onClick = (phone) => {
-    
+  postToServer = (timestamp) => {
+    //   fetch('http://131.179.42.187:5500/api/newLoc', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     'uniqueid': "Sahil",
+    //     'timestamp': timestamp,
+    //     'latitude': this.state.latitude,
+    //     'longitude': this.state.longitude //CHECK THIS FOR FINAL IMPLEMENTATION
+    //   })
+    // }).then(function(response) {
+    //   console.log(response.json())
+    // }).catch(function(err) {
+    //   console.log(err);
+    // })
+
+    console.log("post req sent");
+  }
+
+  onStart = (phone) => {
+    this.setState({ looping: true }, () => {
+     console.log('looping: ', this.state.looping)
+    })
     const dateTime = Date.now();
     const timestamp = Math.floor(dateTime / 1000);
     var text = "Lat: " + this.state.latitude + " Long: " + this.state.longitude + " Time: " + timestamp;
 
+    //SEND TEXT
     var SmsAndroid = require('react-native-sms-android');
-    SmsAndroid.sms(
-      phone, // phone number to send sms to
-      text, // sms body
-      'sendDirect', // sendDirect or sendIndirect
-      (err, message) => {
-        if (err){
-          console.log("error");
-        } else {
-          console.log(message); // callback message
-        }
-      }
-    );
+    // SmsAndroid.sms(
+    //   phone, // phone number to send sms to
+    //   text, // sms body
+    //   'sendDirect', // sendDirect or sendIndirect
+    //   (err, message) => {
+    //     if (err){
+    //       console.log("error");
+    //     } else {
+    //       console.log(message); // callback message
+    //     }
+    //   }
+    // );
 
-    //CHANGE LOCALHOST
-    fetch('http://131.179.42.187:5500/api/newLoc', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        'uniqueid': "Sahil",
-        'timestamp': timestamp,
-        'latitude': this.state.latitude,
-        'longitude': this.state.longitude //CHECK THIS FOR FINAL IMPLEMENTATION
-      })
-    }).then(function(response) {
-      console.log(response.json())
-    }).catch(function(err) {
-      console.log(err);
-    })
   }
+
+
+onStop = () => {
+  this.setState({ looping: false }, () => {
+     console.log('looping: ', this.state.looping)
+  })
+}
 
 render() {
   const { phone } = this.props.navigation.state.params;
+  const dateTime = Date.now();
+  const timestamp = Math.floor(dateTime / 1000);
+
+  if (this.state.canSend && this.state.looping) 
+    this.postToServer(timestamp)
 
   return (
     <View style={styles.container}>
         <TouchableOpacity
           	style={styles.startbutton} 
-            onPress={ () => this.onClick(phone)}>
+            onPress={ () => this.onStart(phone)}>
           	<Text style={styles.starttext}>START</Text>
         </TouchableOpacity>
          <TouchableOpacity
             style={styles.stopbutton} 
-            onPress={ () => this.onClick(phone)}>
+            onPress={ () => this.onStop(phone)}>
             <Text style={styles.stoptext}>STOP</Text>
         </TouchableOpacity>
           {this.state.error ? <Text>Error: {this.state.error}</Text> : null}
@@ -123,7 +151,7 @@ const styles = StyleSheet.create({
    flex: 1
   },
   stopbutton: {
-    borderWidth:1,
+   borderWidth:1,
    borderColor:'rgba(0,0,0,0.2)',
    alignItems:'center',
    justifyContent:'center',
