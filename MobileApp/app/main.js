@@ -26,7 +26,17 @@ export default class Main extends Component {
         longitude: null,
         error: null,
         position: null,
+        looping: false,
+        canSend: false
     };
+
+    // Toggle the state every second
+    setInterval(() => {
+      this.setState(previousState => {
+        return { canSend: !previousState.canSend };
+      });
+    }, 30000);
+
   }
 
   componentDidMount() {
@@ -50,28 +60,8 @@ export default class Main extends Component {
     }
   }
 
-  onClick = (phone) => {
-    
-    const dateTime = Date.now();
-    const timestamp = Math.floor(dateTime / 1000);
-    var text = "Lat: " + this.state.latitude + " Long: " + this.state.longitude + " Time: " + timestamp;
-
-    var SmsAndroid = require('react-native-sms-android');
-    SmsAndroid.sms(
-      phone, // phone number to send sms to
-      text, // sms body
-      'sendDirect', // sendDirect or sendIndirect
-      (err, message) => {
-        if (err){
-          console.log("error");
-        } else {
-          console.log(message); // callback message
-        }
-      }
-    );
-
-    //CHANGE LOCALHOST
-    fetch('http://131.179.42.187:5500/api/newLoc', {
+  postToServer = (timestamp) => {
+      fetch('http://131.179.8.188:5500/api/newLoc', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -88,21 +78,62 @@ export default class Main extends Component {
     }).catch(function(err) {
       console.log(err);
     })
+
+    console.log("post req sent");
   }
+
+  onStart = (phone) => {
+    this.setState({ looping: true }, () => {
+     console.log('looping: ', this.state.looping)
+    })
+    const dateTime = Date.now();
+    const timestamp = Math.floor(dateTime / 1000);
+    var text = "Lat: " + this.state.latitude + " Long: " + this.state.longitude + " Time: " + timestamp;
+
+    //SEND TEXT
+    var SmsAndroid = require('react-native-sms-android');
+    SmsAndroid.sms(
+      phone, // phone number to send sms to
+      text, // sms body
+      'sendDirect', // sendDirect or sendIndirect
+      (err, message) => {
+        if (err){
+          console.log("error");
+        } else {
+          console.log(message); // callback message
+        }
+      }
+    );
+
+  }
+
+
+onStop = () => {
+  this.setState({ looping: false }, () => {
+     console.log('looping: ', this.state.looping)
+  })
+}
 
 render() {
   const { phone } = this.props.navigation.state.params;
+  const dateTime = Date.now();
+  const timestamp = Math.floor(dateTime / 1000);
+
+  if (this.state.canSend && this.state.looping) 
+    this.postToServer(timestamp)
 
   return (
     <View style={styles.container}>
-        <Text>{phone}</Text>
         <TouchableOpacity
-          	style={styles.button} 
-            onPress={ () => this.onClick(phone)}>
-          	<Text style={styles.text}>!</Text>
+          	style={styles.startbutton} 
+            onPress={ () => this.onStart(phone)}>
+          	<Text style={styles.starttext}>START</Text>
         </TouchableOpacity>
-        <Text>Latitude: {this.state.latitude}</Text>
-        <Text>Longitude: {this.state.longitude}</Text>
+         <TouchableOpacity
+            style={styles.stopbutton} 
+            onPress={ () => this.onStop(phone)}>
+            <Text style={styles.stoptext}>STOP</Text>
+        </TouchableOpacity>
           {this.state.error ? <Text>Error: {this.state.error}</Text> : null}
         </View>
     );
@@ -111,23 +142,40 @@ render() {
 
 
 const styles = StyleSheet.create({
-  button: {
+  startbutton: {
     borderWidth:1,
    borderColor:'rgba(0,0,0,0.2)',
    alignItems:'center',
    justifyContent:'center',
-   width:200,
-   height:200,
-   backgroundColor:'red',
-   borderRadius:100,
+   width: 300,
+   backgroundColor: '#4286F4',
+   flex: 1,
+   marginTop: 20,
+   borderRadius: 20
   },
-  text: {
+  stopbutton: {
+   borderWidth:1,
+   borderColor:'rgba(0,0,0,0.2)',
+   alignItems:'center',
+   justifyContent:'center',
+   width: 300,
+   backgroundColor: '#93BAF9',
+   flex: 1,
+   marginBottom: 20,
+   marginTop: 20,
+   borderRadius: 20
+  },
+  starttext: {
   	fontSize: 70,
   	color: 'white'
   },
+  stoptext: {
+    fontSize: 70,
+    color: 'white'
+  },
   container: {
   	flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center'
   }
 });

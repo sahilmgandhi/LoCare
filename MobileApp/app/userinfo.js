@@ -32,7 +32,7 @@ export default class UserPage extends Component {
           style={styles.input}
           placeholder='Name'
           placeholderTextColor='gray'
-          underlineColorAndroid={'#44B3C2'}
+          underlineColorAndroid={'#4286F4'}
           onChangeText={(name) => this.setState({name})}
           value={this.state.name}
         />
@@ -41,7 +41,7 @@ export default class UserPage extends Component {
           style={styles.input}
           placeholder='Phone'
           placeholderTextColor='gray'
-          underlineColorAndroid={'#44B3C2'}
+          underlineColorAndroid={'#4286F4'}
           onChangeText={(phone) => this.setState({phone})}
           value={this.state.phone}
         />
@@ -50,7 +50,7 @@ export default class UserPage extends Component {
           style={styles.input}
           placeholder='Email'
           placeholderTextColor='gray'
-          underlineColorAndroid={'#44B3C2'}
+          underlineColorAndroid={'#4286F4'}
           onChangeText={(email) => this.setState({email})}
           value={this.state.email}
         />
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   doneButton: {
     marginTop: 10,
-    color: '#44B3C2',
+    color: '#4286F4',
     fontSize: 20,
     padding: 5
   }
