@@ -35,7 +35,7 @@ export default class Main extends Component {
       this.setState(previousState => {
         return { canSend: !previousState.canSend };
       });
-    }, 5000);
+    }, 10000);
 
   }
 
