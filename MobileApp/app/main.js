@@ -61,10 +61,9 @@ export default class Main extends Component {
   }
 
   postToServer = (timestamp) => {
-    lat = this.state.latitude + (rand(5)*0.0001);
-    long = this.state.longitude + (rand(5)*0.0001);
+    var rand = Math.floor(Math.random() * 5) + 1 ;
 
-      fetch('http://131.179.8.188:5500/api/newLoc', {
+    fetch('http://131.179.8.188:5500/api/newLoc', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -73,8 +72,8 @@ export default class Main extends Component {
       body: JSON.stringify({
         'uniqueid': "Sahil",
         'timestamp': timestamp,
-        'latitude': lat,
-        'longitude': long//CHECK THIS FOR FINAL IMPLEMENTATION
+        'latitude': this.state.latitude + (rand*0.0002),
+        'longitude': this.state.longitude + (rand*0.0001)
       })
     }).then(function(response) {
       console.log(response.json())
@@ -128,12 +127,12 @@ render() {
   return (
     <View style={styles.container}>
         <TouchableOpacity
-          	style={styles.startbutton} 
+          	style={[styles.startbutton, this.state.looping ? styles.disabled : styles.enabled ]} 
             onPress={ () => this.onStart(phone)}>
           	<Text style={styles.starttext}>START</Text>
         </TouchableOpacity>
          <TouchableOpacity
-            style={styles.stopbutton} 
+            style={[styles.stopbutton, this.state.looping ? styles.enabled : styles.disabled ]} 
             onPress={ () => this.onStop(phone)}>
             <Text style={styles.stoptext}>STOP</Text>
         </TouchableOpacity>
@@ -151,7 +150,6 @@ const styles = StyleSheet.create({
    alignItems:'center',
    justifyContent:'center',
    width: 300,
-   backgroundColor: '#4286F4',
    flex: 1,
    marginTop: 20,
    borderRadius: 20
@@ -162,11 +160,16 @@ const styles = StyleSheet.create({
    alignItems:'center',
    justifyContent:'center',
    width: 300,
-   backgroundColor: '#93BAF9',
    flex: 1,
    marginBottom: 20,
    marginTop: 20,
    borderRadius: 20
+  },
+  disabled: {
+    backgroundColor: 'rgba(134, 141, 153, 0.5)'
+  },
+  enabled: {
+    backgroundColor: '#4286F4'
   },
   starttext: {
   	fontSize: 70,
