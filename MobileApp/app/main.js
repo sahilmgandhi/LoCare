@@ -35,7 +35,7 @@ export default class Main extends Component {
       this.setState(previousState => {
         return { canSend: !previousState.canSend };
       });
-    }, 30000);
+    }, 5000);
 
   }
 
@@ -61,6 +61,9 @@ export default class Main extends Component {
   }
 
   postToServer = (timestamp) => {
+    lat = this.state.latitude + (rand(5)*0.0001);
+    long = this.state.longitude + (rand(5)*0.0001);
+
       fetch('http://131.179.8.188:5500/api/newLoc', {
       method: 'POST',
       headers: {
@@ -70,8 +73,8 @@ export default class Main extends Component {
       body: JSON.stringify({
         'uniqueid': "Sahil",
         'timestamp': timestamp,
-        'latitude': this.state.latitude,
-        'longitude': this.state.longitude //CHECK THIS FOR FINAL IMPLEMENTATION
+        'latitude': lat,
+        'longitude': long//CHECK THIS FOR FINAL IMPLEMENTATION
       })
     }).then(function(response) {
       console.log(response.json())
