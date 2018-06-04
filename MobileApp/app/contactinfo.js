@@ -95,7 +95,7 @@ export default class ContactsPage extends Component {
         <TouchableOpacity>
           <Text
             style={styles.doneButton}
-            onPress={()=>this.props.navigation.navigate("Main", { phone: this.state.phone1})} 
+            onPress={()=>this.props.navigation.navigate("Main", { phone: this.state.phone1, username: name})} 
           >Done
           </Text>
         </TouchableOpacity>

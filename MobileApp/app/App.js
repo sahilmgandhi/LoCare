@@ -28,8 +28,6 @@ const Navigation = StackNavigator({
   }
 })
 
-console.disableYellowBox = true;
-
 export default Navigation;
 
 

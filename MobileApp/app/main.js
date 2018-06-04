@@ -84,13 +84,13 @@ export default class Main extends Component {
     console.log("post req sent");
   }
 
-  onStart = (phone) => {
+  onStart = (phone, name) => {
     this.setState({ looping: true }, () => {
      console.log('looping: ', this.state.looping)
     })
     const dateTime = Date.now();
     const timestamp = Math.floor(dateTime / 1000);
-    var text = "Lat: " + this.state.latitude + " Long: " + this.state.longitude + " Time: " + timestamp;
+    var text = name + " is in trouble! Visit this link and type in unique id 'Sahil' to see where they are: http://131.179.8.188:5500"
 
     //SEND TEXT
     var SmsAndroid = require('react-native-sms-android');
@@ -106,7 +106,6 @@ export default class Main extends Component {
         }
       }
     );
-
   }
 
 
@@ -117,7 +116,7 @@ onStop = () => {
 }
 
 render() {
-  const { phone } = this.props.navigation.state.params;
+  const { phone, username } = this.props.navigation.state.params;
   const dateTime = Date.now();
   const timestamp = Math.floor(dateTime / 1000);
 
@@ -128,7 +127,7 @@ render() {
     <View style={styles.container}>
         <TouchableOpacity
           	style={[styles.startbutton, this.state.looping ? styles.disabled : styles.enabled ]} 
-            onPress={ () => this.onStart(phone)}>
+            onPress={ () => this.onStart(phone, username)}>
           	<Text style={styles.starttext}>START</Text>
         </TouchableOpacity>
          <TouchableOpacity
