@@ -38,15 +38,14 @@
     <br>
     <input id="pac-input" class="controls" type="text" placeholder="Search unique ID">
     <br>
+    <br> (OPTIONAL) Choose timeframe:
+    <input type="checkbox" id="dateCheck" name="datetimes" />
     <br>
-    (OPTIONAL) Choose timeframe: <input type="checkbox" id = "dateCheck" name="datetimes"/>
-    <br>
-    <input type="button" id="searchBtn" value="Search" onclick="deleteMarkers(); handleInput('');"
-      class="btn btn-primary" />
+    <input type="button" id="searchBtn" value="Search" onclick="deleteMarkers(); handleInput('');" class="btn btn-primary" />
     <br>
     <br>
 
-    
+
     <input type="button" id="stopPeriodicUpdates" value="Stop Periodic Updates" onclick="stopPeriodicUpdates();" class="btn btn-warning"
     />
     <br>
@@ -65,13 +64,13 @@
 
   <script>
 
-      $(function() {
-        $('input[name="datetimes"]').daterangepicker({
-          startDate: "05/23/2018",
-          endDate: "05/29/2018",
-          opens: 'left'
-        });
+    $(function () {
+      $('input[name="datetimes"]').daterangepicker({
+        startDate: "05/23/2018",
+        endDate: "05/29/2018",
+        opens: 'left'
       });
+    });
 
     // $(function() {
     //   $('input[name="datetimes"]').daterangepicker({
@@ -81,15 +80,15 @@
     //   });
     // });  
 
-    $('input[name="datetimes"]').on('showCalendar.daterangepicker', function(ev, picker) {
+    $('input[name="datetimes"]').on('showCalendar.daterangepicker', function (ev, picker) {
       startDate = picker.startDate.format('YYYY-MM-DD');
       endDate = picker.endDate.format('YYYY-MM-DD');
 
       console.log(startDate);
       console.log(endDate);
     });
-    
-    $('input[name="datetimes"]').on('apply.daterangepicker', function(ev, picker) {
+
+    $('input[name="datetimes"]').on('apply.daterangepicker', function (ev, picker) {
       startDate = picker.startDate.format('YYYY-MM-DD');
       endDate = picker.endDate.format('YYYY-MM-DD');
 
@@ -105,7 +104,7 @@
     var navCount = 0;
     function toggleNav() {
       if (navCount % 2 == 0) {
-        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("mySidenav").style.width = "330px";
         document.getElementById("mySidenav").style.paddingLeft = "2.5vw";
       }
       else {
@@ -132,14 +131,19 @@
     }
 
     var timeOut;
+
+    function periodicUpdate() {
+      handleInput();
+    }
+
     function restartPeriodicUpdates() {
-      
+
       if (jsonResp == null) {
         stopPeriodicUpdates();
       } else {
         if ((currentUser != '') || (jsonResp.length != 0)) {
-            // handleInput('');
-            timeOut = setTimeout(restartPeriodicUpdates, 1000);
+          // handleInput('');
+          timeOut = setTimeout(periodicUpdate, 1000);
         } else {
           stopPeriodicUpdates();
         }
@@ -176,10 +180,11 @@
       });
     }*/
 
-    
+
 
     function deleteAllData(elem) {
       var value = '';
+      stopPeriodicUpdates()
       if (elem == '') {
         value = document.getElementById('pac-input').value;
       }
@@ -188,20 +193,20 @@
       }
 
       var getStringValue = '/api/deleteAllLoc?uniqueid=' + value;
-      
+
 
       console.log(getStringValue);
 
-        $.ajax({
-            type: "DELETE",
-            url: getStringValue,
-            // data: "name=someValue",
-            success: function(msg){
-                alert("Data Deleted: " + msg);
-            }
-        });   
+      $.ajax({
+        type: "DELETE",
+        url: getStringValue,
+        // data: "name=someValue",
+        success: function (msg) {
+          alert("Data Deleted: " + msg);
+        }
+      });
 
-        deleteMarkers();   
+      deleteMarkers();
     }
 
 
@@ -214,71 +219,71 @@
       if (value == '') {
         alert("Please enter a valid ID");
       } else {
-          var getStringValue = '/api/getLoc?uniqueid=' + value;
-          currentUser = value;          
+        var getStringValue = '/api/getLoc?uniqueid=' + value;
+        currentUser = value;
 
-          $.ajax({
-            url: getStringValue,
-            async: false,
-            dataType: 'json',
-            success: function (resp) {
-              jsonResp = resp;
-            }
-          });
+        $.ajax({
+          url: getStringValue,
+          async: false,
+          dataType: 'json',
+          success: function (resp) {
+            jsonResp = resp;
+          }
+        });
 
-          var count = jsonResp.length;
-          if (count == 0) {
-            alert("USER ID NOT FOUND!");
-          } else {
-            if (document.getElementById('dateCheck').checked) {
-              console.log(jsonResp);
-  
-              var startMs = moment(startDate).unix().valueOf();
-              var endMs = moment(endDate).unix().valueOf();
+        var count = jsonResp.length;
+        if (count == 0) {
+          alert("USER ID NOT FOUND!");
+        } else {
+          if (document.getElementById('dateCheck').checked) {
+            console.log(jsonResp);
 
-              // console.log(moment.unix(startMs).format('dddd, MMMM Do, YYYY h:mm:ss A'));
-              // console.log(moment.unix(startMs).format('dddd, MMMM Do, YYYY h:mm:ss A'));
+            var startMs = moment(startDate).unix().valueOf();
+            var endMs = moment(endDate).unix().valueOf();
 
-              restartPeriodicUpdates();
-              for (var i = 0; i < count; i++) {
-                // console.log("startMs: " + startMs);
-                // console.log("endMs: " + endMs);
-                // console.log("Timestamp: " + jsonResp[i].timestamp);
+            // console.log(moment.unix(startMs).format('dddd, MMMM Do, YYYY h:mm:ss A'));
+            // console.log(moment.unix(startMs).format('dddd, MMMM Do, YYYY h:mm:ss A'));
 
-                // console.log(">=: " + jsonResp[i].timestamp >= startMs);
-                // console.log("<= : " + jsonResp[i].timestamp <= endMs)
+            restartPeriodicUpdates();
+            for (var i = 0; i < count; i++) {
+              // console.log("startMs: " + startMs);
+              // console.log("endMs: " + endMs);
+              // console.log("Timestamp: " + jsonResp[i].timestamp);
 
-                if (jsonResp[i].timestamp >= startMs && jsonResp[i].timestamp <= endMs) {
-                  console.log("aseg");
-                  var latitude = Number(jsonResp[ i ].latitude);
-                  var longitude = Number(jsonResp[ i ].longitude);
-                  var location = { lat: latitude, lng: longitude };
-                  var time = moment.unix(jsonResp[i].timestamp).format("DD MMM YYYY hh:mm a") //parse integer
-                  
-                  addMarker(location, map, time);
+              // console.log(">=: " + jsonResp[i].timestamp >= startMs);
+              // console.log("<= : " + jsonResp[i].timestamp <= endMs)
 
-                  // var newLoc = { lat: 34.069633, lng: -118.444275 };
-                  // addMarker(newLoc, map);
-                }
-              }
-
-            } else {
-
-              restartPeriodicUpdates();
-              for (var i = 0; i < count; i++) {
+              if (jsonResp[ i ].timestamp >= startMs && jsonResp[ i ].timestamp <= endMs) {
+                //console.log("aseg");
                 var latitude = Number(jsonResp[ i ].latitude);
                 var longitude = Number(jsonResp[ i ].longitude);
                 var location = { lat: latitude, lng: longitude };
-                var time = moment.unix(jsonResp[i].timestamp).format("DD MMM YYYY hh:mm a") //parse integer
-                
+                var time = moment.unix(jsonResp[ i ].timestamp).format("DD MMM YYYY hh:mm a") //parse integer
+
                 addMarker(location, map, time);
 
                 // var newLoc = { lat: 34.069633, lng: -118.444275 };
                 // addMarker(newLoc, map);
               }
             }
+
+          } else {
+
+            restartPeriodicUpdates();
+            for (var i = 0; i < count; i++) {
+              var latitude = Number(jsonResp[ i ].latitude);
+              var longitude = Number(jsonResp[ i ].longitude);
+              var location = { lat: latitude, lng: longitude };
+              var time = moment.unix(jsonResp[ i ].timestamp).format("DD MMM YYYY hh:mm a") //parse integer
+
+              addMarker(location, map, time);
+
+              // var newLoc = { lat: 34.069633, lng: -118.444275 };
+              // addMarker(newLoc, map);
+            }
           }
         }
+      }
     }
 
     // Sets the map on all markers in the array.
@@ -301,7 +306,7 @@
 
     // Adds a marker to the map.
     function addMarker(location, map, time) {
-      
+
       // Add the marker at the clicked location, and add the next-available label
       // from the array of alphabetical characters.
       var marker = new google.maps.Marker({
@@ -313,15 +318,15 @@
 
       var location = "Location: " + marker.getPosition() + "<br />" + "Time: " + time;
       var infowindow = new google.maps.InfoWindow({
-          content: location
+        content: location
       });
 
-      marker.addListener('mouseover', function() {
-          infowindow.open(map, marker);
+      marker.addListener('mouseover', function () {
+        infowindow.open(map, marker);
       });
 
-      marker.addListener('mouseout', function() {
-          infowindow.close();
+      marker.addListener('mouseout', function () {
+        infowindow.close();
       });
     }
 

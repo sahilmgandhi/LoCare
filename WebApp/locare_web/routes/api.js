@@ -122,7 +122,7 @@ router.post('/newUser', function (req, res, next) {
 // Delete all locations for a database
 router.delete('/deleteAllLoc', function (req, res, next) {
   let uniqueId = String(req.query.uniqueid);
-  console.log(uniqueid);
+  console.log(uniqueId);
   db.deleteAllLocations(uniqueId, (err, result) => {
     if (err) {
       handleErrors(res, req, err, "", "");
