@@ -38,7 +38,7 @@ export default class ContactsPage extends Component {
             style={styles.input}
             placeholder='Name'
             placeholderTextColor='gray'
-            underlineColorAndroid={'#44B3C2'}
+            underlineColorAndroid={'#4286F4'}
             onChangeText={(name1) => this.setState({name1})}
             value={this.state.name1}
           />
@@ -47,7 +47,7 @@ export default class ContactsPage extends Component {
             style={styles.input}
             placeholder='Phone'
             placeholderTextColor='gray'
-            underlineColorAndroid={'#44B3C2'}
+            underlineColorAndroid={'#4286F4'}
             onChangeText={(phone1) => this.setState({phone1})}
             value={this.state.phone1}
           />
@@ -56,7 +56,7 @@ export default class ContactsPage extends Component {
             style={styles.input}
             placeholder='Email'
             placeholderTextColor='gray'
-            underlineColorAndroid={'#44B3C2'}
+            underlineColorAndroid={'#4286F4'}
             onChangeText={(email1) => this.setState({email1})}
             value={this.state.email1}
           />
@@ -68,7 +68,7 @@ export default class ContactsPage extends Component {
             style={styles.input}
             placeholder='Name'
             placeholderTextColor='gray'
-            underlineColorAndroid={'#44B3C2'}
+            underlineColorAndroid={'#4286F4'}
             onChangeText={(name2) => this.setState({name2})}
             value={this.state.name2}
           />
@@ -77,7 +77,7 @@ export default class ContactsPage extends Component {
             style={styles.input}
             placeholder='Phone'
             placeholderTextColor='gray'
-            underlineColorAndroid={'#44B3C2'}
+            underlineColorAndroid={'#4286F4'}
             onChangeText={(phone2) => this.setState({phone2})}
             value={this.state.phone2}
           />
@@ -86,7 +86,7 @@ export default class ContactsPage extends Component {
             style={styles.input}
             placeholder='Email'
             placeholderTextColor='gray'
-            underlineColorAndroid={'#44B3C2'}
+            underlineColorAndroid={'#4286F4'}
             onChangeText={(email2) => this.setState({email2})}
             value={this.state.email2}
           />

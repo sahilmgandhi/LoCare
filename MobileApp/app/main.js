@@ -35,7 +35,8 @@ export default class Main extends Component {
       this.setState(previousState => {
         return { canSend: !previousState.canSend };
       });
-    }, 1000);
+    }, 30000);
+
   }
 
   componentDidMount() {
@@ -60,23 +61,23 @@ export default class Main extends Component {
   }
 
   postToServer = (timestamp) => {
-    //   fetch('http://131.179.42.187:5500/api/newLoc', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     'uniqueid': "Sahil",
-    //     'timestamp': timestamp,
-    //     'latitude': this.state.latitude,
-    //     'longitude': this.state.longitude //CHECK THIS FOR FINAL IMPLEMENTATION
-    //   })
-    // }).then(function(response) {
-    //   console.log(response.json())
-    // }).catch(function(err) {
-    //   console.log(err);
-    // })
+      fetch('http://131.179.8.188:5500/api/newLoc', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'uniqueid': "Sahil",
+        'timestamp': timestamp,
+        'latitude': this.state.latitude,
+        'longitude': this.state.longitude //CHECK THIS FOR FINAL IMPLEMENTATION
+      })
+    }).then(function(response) {
+      console.log(response.json())
+    }).catch(function(err) {
+      console.log(err);
+    })
 
     console.log("post req sent");
   }
@@ -91,18 +92,18 @@ export default class Main extends Component {
 
     //SEND TEXT
     var SmsAndroid = require('react-native-sms-android');
-    // SmsAndroid.sms(
-    //   phone, // phone number to send sms to
-    //   text, // sms body
-    //   'sendDirect', // sendDirect or sendIndirect
-    //   (err, message) => {
-    //     if (err){
-    //       console.log("error");
-    //     } else {
-    //       console.log(message); // callback message
-    //     }
-    //   }
-    // );
+    SmsAndroid.sms(
+      phone, // phone number to send sms to
+      text, // sms body
+      'sendDirect', // sendDirect or sendIndirect
+      (err, message) => {
+        if (err){
+          console.log("error");
+        } else {
+          console.log(message); // callback message
+        }
+      }
+    );
 
   }
 
@@ -146,18 +147,23 @@ const styles = StyleSheet.create({
    borderColor:'rgba(0,0,0,0.2)',
    alignItems:'center',
    justifyContent:'center',
-   width:400,
+   width: 300,
    backgroundColor: '#4286F4',
-   flex: 1
+   flex: 1,
+   marginTop: 20,
+   borderRadius: 20
   },
   stopbutton: {
    borderWidth:1,
    borderColor:'rgba(0,0,0,0.2)',
    alignItems:'center',
    justifyContent:'center',
-   width:400,
+   width: 300,
    backgroundColor: '#93BAF9',
-   flex: 1
+   flex: 1,
+   marginBottom: 20,
+   marginTop: 20,
+   borderRadius: 20
   },
   starttext: {
   	fontSize: 70,
