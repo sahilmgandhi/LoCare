@@ -63,7 +63,7 @@ export default class Main extends Component {
   postToServer = (timestamp) => {
     var rand = Math.floor(Math.random() * 5) + 1 ;
 
-    fetch('http://131.179.8.188:5500/api/newLoc', {
+    fetch('http://131.179.9.25:5500/api/newLoc', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -90,7 +90,7 @@ export default class Main extends Component {
     })
     const dateTime = Date.now();
     const timestamp = Math.floor(dateTime / 1000);
-    var text = name + " is in trouble! Visit this link and type in unique id 'Sahil' to see where they are: http://131.179.8.188:5500"
+    var text = name + " is in trouble! Visit this link and type in unique id 'Sahil' to see where they are: http://131.179.9.25:5500"
 
     //SEND TEXT
     var SmsAndroid = require('react-native-sms-android');
