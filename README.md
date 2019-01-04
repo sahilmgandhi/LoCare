@@ -9,7 +9,7 @@ Spring 2018
 1. Make sure your Android device is connected to your computer. You need an actual device for full functionality, including gathering of location data and sending text messages
 2. Clone the LoCare repository 
 	
-	```https://github.com/sheldon283/LoCare.git```
+	```git clone https://github.com/sahilmgandhi/LoCare.git```
 3. Install homebrew (if you don't already have it)
 	
 	```/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"```
